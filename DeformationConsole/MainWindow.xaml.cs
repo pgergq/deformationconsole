@@ -27,7 +27,6 @@ namespace DeformationConsole
     }
 }
 
-
 /*        static void Main(string[] args)
         {
             Console.WriteLine("NamedPipe client started.");
