@@ -1,8 +1,43 @@
 ﻿<Window x:Name="mainWindow" x:Class="DeformationConsole.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Deformation Console" Height="600" Width="800" FontFamily="Consolas" FontSize="10" ResizeMode="NoResize">
-    <Grid x:Name="mainGrid">
-        
+        Title="Deformation Console" Height="600" Width="800" FontFamily="Consolas" FontSize="12"
+        ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen" Icon="Resources/bunny_transp.png"
+        >
+    <Grid x:Name="mainGrid" Background="{StaticResource bunnyBrush}">
+
+        <!--Grid definitions-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.618033*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+
+        <!--Log TextBox-->
+        <TextBox x:Name="logTextBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="9" Text="> Awaiting connection..." IsReadOnly="True" Background="Black" Foreground="White" BorderBrush="#FF363636" CaretBrush="#FFD4D4D4">
+            <TextBox.SelectionBrush>
+                <SolidColorBrush Color="Red"/>
+            </TextBox.SelectionBrush>
+        </TextBox>
+
+        <!--Connect section-->
+        <Label x:Name="connectLabel" Grid.Column="0" Grid.Row="1"  Content="Connect to the simulator application (IPC):" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button x:Name="connectButton" Grid.Column="1" Grid.Row="1" Content="Connect" HorizontalAlignment="Left" Width="170" Margin="10,10,0,10" Click="connectButton_Click"/>
+        <TextBox x:Name="connectionStatusTextBox" Grid.Column="1" Grid.Row="1" Text="Connection status: Disconnected" Foreground="Red" Margin="194,10,10,10" Padding="0,5,0,0" IsReadOnly="True"/>
+
+        <!--Second label-->
+        <Label x:Name="modifyLabel" Grid.Column="0" Grid.Row="2" Content="Modify simulation properties: " HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False"/>
+
     </Grid>
 </Window>

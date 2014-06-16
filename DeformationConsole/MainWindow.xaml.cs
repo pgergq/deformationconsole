@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
+using System.IO.Pipes;
+using System.IO;
 
 namespace DeformationConsole
 {
@@ -20,41 +23,67 @@ namespace DeformationConsole
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private Thread client = null;
+        
         public MainWindow()
         {
             InitializeComponent();
         }
-    }
-}
 
-/*        static void Main(string[] args)
+        /// <summary>
+        /// Connect button event handler
+        /// Connect to named pipe and start processing thread
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void connectButton_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("NamedPipe client started.");
-
             using (var pipe = new NamedPipeClientStream(".", "deformablepipe", PipeDirection.InOut))
             {
+                var tmp = this.Cursor;
                 try
                 {
-                    pipe.Connect(3000);
-                    Console.WriteLine("NamedPipe client connected.");
-
-                    using (StreamWriter sr = new StreamWriter(pipe))
-                    {
-                        while (true)
-                        {
-                            sr.WriteLine(Console.ReadLine());
-                            sr.Flush();
-                            Console.WriteLine("result: [" + readPipe(pipe) + "]");
-                        }
-                    }
+                    this.Cursor = Cursors.Wait;
+                    pipe.Connect(2000);
+                    this.Cursor = tmp;
+                    client = new Thread(() => pipeThread(pipe));
+                    client.Start();
+                    connectedEnableGUI();
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Connect failed."); ;
+                    connectionStatusTextBox.Text = "Connection status: Timeout";
+                    this.Cursor = tmp;
                 }
-
             }
+        }
 
+
+        /// <summary>
+        /// Enable GUI elements on named pipe connection
+        /// </summary>
+        private void connectedEnableGUI()
+        {
+            connectionStatusTextBox.Foreground = Brushes.DarkOliveGreen;
+            connectionStatusTextBox.Text = "Connection status: Connected";
+            modifyLabel.IsEnabled = true;
+        }
+
+        /// <summary>
+        /// Send and receive messages on the pipe
+        /// </summary>
+        private void pipeThread(NamedPipeClientStream pipe)
+        {
+            using (StreamWriter sr = new StreamWriter(pipe))
+            {
+                while (true)
+                {
+                    sr.WriteLine(Console.ReadLine());
+                    sr.Flush();
+                    Console.WriteLine("result: [" + readPipe(pipe) + "]");
+                }
+            }
         }
 
         /// <summary>
@@ -76,4 +105,5 @@ namespace DeformationConsole
             }
             return System.Text.Encoding.ASCII.GetString(text.ToArray());
         }
-*/
+    }
+}
