@@ -33,15 +33,39 @@
         </TextBox>
 
         <!--Connect section-->
-        <Label x:Name="connectLabel" Grid.Column="0" Grid.Row="1"  Content="Connect to the simulator application (IPC):" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Button x:Name="connectButton" Grid.Column="1" Grid.Row="1" Content="Connect" HorizontalAlignment="Left" Width="170" Margin="10,10,0,10" Click="connectButton_Click"/>
-        <TextBox x:Name="connectionStatusTextBox" Grid.Column="1" Grid.Row="1" Text="Connection status: Disconnected" Foreground="Red" Margin="194,10,10,10" Padding="0,3,0,0" IsReadOnly="True"/>
+        <GroupBox x:Name="connectionSection" Header="Connect" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,20">
+            <Grid x:Name="connectionSectionGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1.618033*"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="connectLabel" Content="Connect to the simulator application (IPC):" Margin="0,10"/>
+                <Button x:Name="connectButton" Content="Connect" Click="connectButton_Click" Grid.Column="1" Margin="10,10,275,10"/>
+                <TextBox x:Name="connectionStatusTextBox" Text="Connection status: Disconnected" Foreground="Red" IsReadOnly="True" Grid.Column="1" Margin="222,10,10,10" Padding="4"/>
+            </Grid>
+        </GroupBox>
 
         <!--Modify section-->
-        <Label x:Name="modifyLabel" Grid.Column="0" Grid.Row="2" Content="Modify simulation properties " HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False"/>
-        <Grid x:Name="modifyGrid" Grid.Column="1" Grid.Row="3" Grid.RowSpan="7" IsEnabled="False">
-            <Label x:Name="somet" Content="Connect to the simulator application (IPC):" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        </Grid>
+        <GroupBox x:Name="modifySection" Header="Modify" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Grid.RowSpan="7" IsEnabled="False">
+            <Grid x:Name="modifySectionGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1.618033*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
+                <Label x:Name="modifyLabel" Grid.Column="0" Grid.Row="0" Content="Modify simulation properties " HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False"/>
+                <Label x:Name="somet" Grid.Column="1" Content="Valami" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>

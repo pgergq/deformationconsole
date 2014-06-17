@@ -71,8 +71,7 @@ namespace DeformationConsole
             connectionStatusTextBox.Foreground = Brushes.DarkOliveGreen;
             connectionStatusTextBox.Text = "Connection status: Connected";
             logText("Clien thread started, processing messages");
-            modifyLabel.IsEnabled = true;
-            modifyGrid.IsEnabled = true;
+            modifySection.IsEnabled = true;
         }
 
         /// <summary>
