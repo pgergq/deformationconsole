@@ -29,6 +29,7 @@ namespace DeformationConsole
         public MainWindow()
         {
             InitializeComponent();
+            logText("Awaiting connection...");
         }
 
         /// <summary>
@@ -47,6 +48,7 @@ namespace DeformationConsole
                     this.Cursor = Cursors.Wait;
                     pipe.Connect(2000);
                     this.Cursor = tmp;
+                    logText("Connect established");
                     client = new Thread(() => pipeThread(pipe));
                     client.Start();
                     connectedEnableGUI();
@@ -54,6 +56,7 @@ namespace DeformationConsole
                 catch (Exception)
                 {
                     connectionStatusTextBox.Text = "Connection status: Timeout";
+                    logText("Connect timeout");
                     this.Cursor = tmp;
                 }
             }
@@ -67,7 +70,18 @@ namespace DeformationConsole
         {
             connectionStatusTextBox.Foreground = Brushes.DarkOliveGreen;
             connectionStatusTextBox.Text = "Connection status: Connected";
+            logText("Clien thread started, processing messages");
             modifyLabel.IsEnabled = true;
+            modifyGrid.IsEnabled = true;
+        }
+
+        /// <summary>
+        /// Add log text to the log area
+        /// </summary>
+        /// <param name="m"></param>
+        private void logText(string m)
+        {
+            logTextBox.Text = "> [" + DateTime.Now.ToLongTimeString() + "] " + m + "\n" + logTextBox.Text;
         }
 
         /// <summary>
