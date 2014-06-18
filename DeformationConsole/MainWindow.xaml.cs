@@ -43,12 +43,12 @@ namespace DeformationConsole
         /// <param name="e"></param>
         private void connectButton_Click(object sender, RoutedEventArgs e)
         {
-            var tmp = this.Cursor;
+            this.Cursor = Cursors.Wait;
             pipe = new NamedPipeClientStream(".", "deformablepipe", PipeDirection.InOut);
             try
             {
                 pipe.Connect(2000);
-                this.Cursor = tmp;
+                this.ClearValue(MainWindow.CursorProperty);
                 logText("Connection established");
                 // #TODO
                 //client = new Thread(() => pipeThread(pipe));
@@ -57,7 +57,6 @@ namespace DeformationConsole
             }
             catch (Exception)
             {
-                connectionStatusTextBox.Text = "Connection status: Timeout";
                 logText("Connection timeout");
                 this.ClearValue(MainWindow.CursorProperty);
             }
@@ -69,9 +68,7 @@ namespace DeformationConsole
         private void connectedEnableGUI()
         {
             connectionSection.IsEnabled = false;            
-            connectionStatusTextBox.Foreground = Brushes.DarkOliveGreen;
-            connectionStatusTextBox.Text = "Connection status: Connected";
-            logText("Client thread started, processing messages");
+            logText("Waiting for commands...");
             modifySection.IsEnabled = true;
         }
 
@@ -87,7 +84,10 @@ namespace DeformationConsole
         /// <param name="m"></param>
         private void logText(string m)
         {
-            logTextBox.Text = "> [" + DateTime.Now.ToLongTimeString() + "] " + m + "\n" + logTextBox.Text;
+            foreach (var s in m.Split('\n'))
+            {
+                logTextBox.Text = "> [" + DateTime.Now.ToLongTimeString() + "] " + s + "\n" + logTextBox.Text;
+            }
         }
 
         /// <summary>
