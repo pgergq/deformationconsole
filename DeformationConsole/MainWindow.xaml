@@ -49,8 +49,8 @@
         <GroupBox x:Name="modifySection" Header="Modify" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Grid.RowSpan="7" IsEnabled="False">
             <Grid x:Name="modifySectionGrid">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="237*"/>
-                    <ColumnDefinition Width="545*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -64,12 +64,25 @@
 
                 <Label x:Name="modifyLabel" Grid.Column="0" Grid.Row="0" Content="Modify simulation properties:" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False" FontWeight="Bold" Height="24" Margin="0,8,0,9" Width="201"/>
 
-                <Label x:Name="stiffnessLabel" Grid.Column="1" Grid.Row="1" Content="Stiffness:" VerticalAlignment="Center" Margin="0,8,425,9" HorizontalContentAlignment="Right" Height="24"/>
-                <Label x:Name="dampingLabel" Grid.Column="1" Grid.Row="2" Content="Damping:" VerticalAlignment="Center" Margin="0,9,425,8" HorizontalContentAlignment="Right" Height="24"/>
-                <Label x:Name="gravityLabel" Grid.Column="1" Grid.Row="3" Content="Gravity:" VerticalAlignment="Center" Margin="0,8,425,9" HorizontalContentAlignment="Right" Height="24"/>
+                <Label x:Name="stiffnessLabel" Grid.Column="1" Grid.Row="1" Content="Stiffness:" VerticalAlignment="Center" Margin="0,8,425,8" HorizontalContentAlignment="Right" Height="24"/>
+                <TextBox x:Name="stiffnessTextBox" Grid.Column="1" Grid.Row="1" Margin="122,8,150,8" Padding="4"/>
+                <Button x:Name="stiffnessButton" Grid.Column="1" Grid.Row="1" Content="Change value" Margin="412,8,10,8"/>
+                <Label x:Name="dampingLabel" Grid.Column="1" Grid.Row="2" Content="Damping:" VerticalAlignment="Center" Margin="0,8,425,8" HorizontalContentAlignment="Right" Height="24"/>
+                <TextBox x:Name="dampingTextBox" Grid.Column="1" Grid.Row="2" Margin="122,8,150,8" Padding="4"/>
+                <Button x:Name="dampingButton" Grid.Column="1" Grid.Row="2" Content="Change value" Margin="412,8,10,8"/>
+                <Label x:Name="gravityLabel" Grid.Column="1" Grid.Row="3" Content="Gravity:" VerticalAlignment="Center" Margin="0,8,425,8" HorizontalContentAlignment="Right" Height="24"/>
+                <TextBox x:Name="gravityTextBox" Grid.Column="1" Grid.Row="3" Margin="122,8,150,8" Padding="4"/>
+                <Button x:Name="gravityButton" Grid.Column="1" Grid.Row="3" Content="Change value" Margin="412,8,10,8"/>
                 <Label x:Name="lightPosLabel" Grid.Column="1" Grid.Row="4" Content="Light position:" VerticalAlignment="Center" Margin="0,8,425,8" HorizontalContentAlignment="Right" Height="24"/>
-                <Label x:Name="lightColLabel" Grid.Column="1" Grid.Row="5" Content="Light colour:" VerticalAlignment="Center" Margin="0,9,425,8" HorizontalContentAlignment="Right" Height="24"/>
-
+                <TextBox x:Name="lightPosTextBox" Grid.Column="1" Grid.Row="4" Margin="122,8,150,8" Padding="4"/>
+                <Button x:Name="lightPosButton" Grid.Column="1" Grid.Row="4" Content="Change value" Margin="412,8,10,8"/>
+                <Label x:Name="lightColLabel" Grid.Column="1" Grid.Row="5" Content="Light colour:" VerticalAlignment="Center" Margin="0,8,425,8" HorizontalContentAlignment="Right" Height="24"/>
+                <TextBox x:Name="lightColTextBox" Grid.Column="1" Grid.Row="5" Margin="122,8,150,8" Padding="4"/>
+                <Button x:Name="lightColButton" Grid.Column="1" Grid.Row="5" Content="Change value" Margin="412,8,10,8"/>
+                <Label x:Name="addBunnyLabel" Grid.Column="1" Grid.Row="6" Content="Add bunny:" VerticalAlignment="Center" Margin="0,8,425,8" HorizontalContentAlignment="Right" Height="24"/>
+                <TextBox x:Name="addBunnyTextBox" Grid.Column="1" Grid.Row="6" Margin="122,8,150,8" Padding="4"/>
+                <Button x:Name="addBunnyButton" Grid.Column="1" Grid.Row="6" Content="Add bunny" Margin="412,8,10,8"/>
+                
             </Grid>
         </GroupBox>
     </Grid>
