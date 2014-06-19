@@ -50,9 +50,6 @@ namespace DeformationConsole
                 pipe.Connect(2000);
                 this.ClearValue(MainWindow.CursorProperty);
                 logText("Connection established");
-                // #TODO
-                //client = new Thread(() => pipeThread(pipe));
-                //client.Start();
                 connectedEnableGUI();
             }
             catch (Exception)
@@ -75,7 +72,6 @@ namespace DeformationConsole
         #endregion
 
 
-
         #region private_methods
 
         /// <summary>
@@ -92,6 +88,7 @@ namespace DeformationConsole
 
         /// <summary>
         /// Send command via named pipe
+        /// Process results (log + GUI changes)
         /// </summary>
         /// <param name="cmd"></param>
         private void sendCommand(string cmd)
@@ -125,11 +122,10 @@ namespace DeformationConsole
         #endregion
 
 
-
         #region buttonclick_events
 
         /// <summary>
-        /// Stiffness command handler
+        /// Stiffness set-command handler
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -148,7 +144,7 @@ namespace DeformationConsole
         }
 
         /// <summary>
-        /// Damping command handler
+        /// Damping set-command handler
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -167,7 +163,7 @@ namespace DeformationConsole
         }
 
         /// <summary>
-        /// Gravity command handler
+        /// Gravity set-command handler
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -186,45 +182,53 @@ namespace DeformationConsole
         }
 
         /// <summary>
-        /// Light position command handler
+        /// Light position set-command handler
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void lightPosButton_Click(object sender, RoutedEventArgs e)
         {
-            float value;
-            if (float.TryParse(lightPosTextBox.Text, out value))
+            float valueX, valueY, valueZ;
+            if (float.TryParse(lightPosXTextBox.Text, out valueX) && float.TryParse(lightPosYTextBox.Text, out valueY) && float.TryParse(lightPosZTextBox.Text, out valueZ))
             {
-                lightPosTextBox.BorderBrush = Brushes.Green;
-                sendCommand("set lightpos " + value.ToString());
+                lightPosXTextBox.BorderBrush = Brushes.Green;
+                lightPosYTextBox.BorderBrush = Brushes.Green;
+                lightPosZTextBox.BorderBrush = Brushes.Green;
+                sendCommand("set lightpos " + valueX.ToString() + " " + valueY.ToString() + " " + valueZ.ToString());
             }
             else
             {
-                lightPosTextBox.BorderBrush = Brushes.Red;
+                lightPosXTextBox.BorderBrush = Brushes.Red;
+                lightPosYTextBox.BorderBrush = Brushes.Red;
+                lightPosZTextBox.BorderBrush = Brushes.Red;
             }
         }
 
         /// <summary>
-        /// Light colour command handler
+        /// Light colour set-command handler
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void lightColButton_Click(object sender, RoutedEventArgs e)
         {
-            float value;
-            if (float.TryParse(lightColTextBox.Text, out value))
+            float valueX, valueY, valueZ;
+            if (float.TryParse(lightColXTextBox.Text, out valueX) && float.TryParse(lightColYTextBox.Text, out valueY) && float.TryParse(lightColZTextBox.Text, out valueZ))
             {
-                lightColTextBox.BorderBrush = Brushes.Green;
-                sendCommand("set lightcol " + value.ToString());
+                lightColXTextBox.BorderBrush = Brushes.Green;
+                lightColYTextBox.BorderBrush = Brushes.Green;
+                lightColZTextBox.BorderBrush = Brushes.Green;
+                sendCommand("set lightcol " + valueX.ToString() + " " + valueY.ToString() + " " + valueZ.ToString());
             }
             else
             {
-                lightColTextBox.BorderBrush = Brushes.Red;
+                lightColXTextBox.BorderBrush = Brushes.Red;
+                lightColYTextBox.BorderBrush = Brushes.Red;
+                lightColZTextBox.BorderBrush = Brushes.Red;
             }
         }
 
         /// <summary>
-        /// Add bunny command handler
+        /// Add bunny set-command handler
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -241,9 +245,69 @@ namespace DeformationConsole
                 addBunnyTextBox.BorderBrush = Brushes.Red;
             }
         }
+        
+        /// <summary>
+        /// Stiffness get-command handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void stiffnessGetButton_Click(object sender, RoutedEventArgs e)
+        {
+            sendCommand("get stiffness");
+        }
+
+        /// <summary>
+        /// Damping get-command handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dampingGetButton_Click(object sender, RoutedEventArgs e)
+        {
+            sendCommand("get damping");
+        }
+
+        /// <summary>
+        /// Gravity get-command handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void gravityGetButton_Click(object sender, RoutedEventArgs e)
+        {
+            sendCommand("get gravity");
+        }
+
+        /// <summary>
+        /// Light position get-command handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lightPosGetButton_Click(object sender, RoutedEventArgs e)
+        {
+            sendCommand("get lightpos");
+        }
+
+        /// <summary>
+        /// Light colour get-command handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lightColGetButton_Click(object sender, RoutedEventArgs e)
+        {
+            sendCommand("get lightcol");
+        }
+
+        /// <summary>
+        /// Add bunny get-command handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void addBunnyGetButton_Click(object sender, RoutedEventArgs e)
+        {
+            sendCommand("get bunny");
+        }
+
 
         #endregion
-
 
 
         #region textchanged_events
@@ -283,9 +347,17 @@ namespace DeformationConsole
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lightPosTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void lightPosXTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            lightPosTextBox.ClearValue(TextBox.BorderBrushProperty);
+            lightPosXTextBox.ClearValue(TextBox.BorderBrushProperty);
+        }
+        private void lightPosYTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            lightPosYTextBox.ClearValue(TextBox.BorderBrushProperty);
+        }
+        private void lightPosZTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            lightPosZTextBox.ClearValue(TextBox.BorderBrushProperty);
         }
 
         /// <summary>
@@ -293,9 +365,17 @@ namespace DeformationConsole
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lightColTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void lightColXTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            lightColTextBox.ClearValue(TextBox.BorderBrushProperty);
+            lightColXTextBox.ClearValue(TextBox.BorderBrushProperty);
+        }
+        private void lightColYTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            lightColYTextBox.ClearValue(TextBox.BorderBrushProperty);
+        }
+        private void lightColZTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            lightColZTextBox.ClearValue(TextBox.BorderBrushProperty);
         }
 
         /// <summary>
