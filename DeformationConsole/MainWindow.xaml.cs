@@ -24,8 +24,14 @@ namespace DeformationConsole
     public partial class MainWindow : Window
     {
 
+        /// <summary>
+        /// The messaging pipe between the console and the simulator applications
+        /// </summary>
         private NamedPipeClientStream pipe = null;
         
+        /// <summary>
+        /// Init application
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -93,10 +99,19 @@ namespace DeformationConsole
         /// <param name="cmd"></param>
         private void sendCommand(string cmd)
         {
-            StreamWriter sr = new StreamWriter(pipe);
-            sr.WriteLine(cmd);
-            sr.Flush();
-            logText(readPipe(pipe));
+            try
+            {
+                StreamWriter sr = new StreamWriter(pipe);
+                sr.WriteLine(cmd);
+                sr.Flush();
+                logText(readPipe(pipe));
+            }
+            catch (Exception e)
+            {
+                logText("Connection error [" + e.Message + "]");
+                modifySection.IsEnabled = false;
+                connectionSection.IsEnabled = true;
+            }
         }
         
         /// <summary>
