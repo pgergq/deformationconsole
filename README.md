@@ -6,4 +6,5 @@
 
 **changelog**:
 
+* 2014.06.19. initial release
 * 2014.06.16. initial commit
