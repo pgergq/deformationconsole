@@ -27,7 +27,7 @@ namespace DeformationConsole
         /// <summary>
         /// The messaging pipe between the console and the simulator applications
         /// </summary>
-        private NamedPipeClientStream pipe = null;
+        private NamedPipeServerStream pipe_comm = null;
         
         /// <summary>
         /// Init application
@@ -49,20 +49,38 @@ namespace DeformationConsole
         /// <param name="e"></param>
         private void connectButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Cursor = Cursors.Wait;
-            pipe = new NamedPipeClientStream(".", "deformablepipe", PipeDirection.InOut);
-            try
+            new Thread(() =>
             {
-                pipe.Connect(2000);
-                this.ClearValue(MainWindow.CursorProperty);
-                logText("Connection established");
-                connectedEnableGUI();
-            }
-            catch (Exception)
-            {
-                logText("Connection timeout");
-                this.ClearValue(MainWindow.CursorProperty);
-            }
+                Dispatcher.Invoke(() =>
+                {
+                    this.Cursor = Cursors.Wait;
+                    connectionSection.IsEnabled = false;
+                    progressBar.Visibility = Visibility.Visible;
+                });
+                try
+                {
+                    if(pipe_comm == null)
+                        pipe_comm = new NamedPipeServerStream("deformable_comm", PipeDirection.InOut);
+                    pipe_comm.WaitForConnection();
+                    Dispatcher.Invoke(() =>
+                    {
+                        this.ClearValue(MainWindow.CursorProperty);
+                        logText("Connection established");
+                        connectedEnableGUI();
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Dispatcher.Invoke(() => 
+                    {
+                        pipe_comm.Dispose();
+                        logText("Connection error [" + ex.Message + "]");
+                        connectionSection.IsEnabled = true;
+                        progressBar.Visibility = Visibility.Hidden;
+                        this.ClearValue(MainWindow.CursorProperty);
+                    });
+                }
+            }).Start();
         }
 
         /// <summary>
@@ -73,6 +91,7 @@ namespace DeformationConsole
             connectionSection.IsEnabled = false;            
             logText("Waiting for commands...");
             modifySection.IsEnabled = true;
+            progressBar.Visibility = Visibility.Hidden;
         }
 
         #endregion
@@ -97,18 +116,21 @@ namespace DeformationConsole
         /// Process results (log + GUI changes)
         /// </summary>
         /// <param name="cmd"></param>
-        private void sendCommand(string cmd)
+        /// <param name="log"></param>
+        private void sendCommand(string cmd, bool log)
         {
             try
             {
-                StreamWriter sr = new StreamWriter(pipe);
+                StreamWriter sr = new StreamWriter(pipe_comm);
                 sr.WriteLine(cmd);
                 sr.Flush();
-                logText(readPipe(pipe));
+                if(log)
+                    logText(readPipe(pipe_comm));
             }
             catch (Exception e)
             {
-                logText("Connection error [" + e.Message + "]");
+                if(log)
+                    logText("Connection error [" + e.Message + "]");
                 modifySection.IsEnabled = false;
                 connectionSection.IsEnabled = true;
             }
@@ -119,7 +141,7 @@ namespace DeformationConsole
         /// </summary>
         /// <param name="pipe">The input pipe to read from.</param>
         /// <returns>The pipe buffer contents in string representation.</returns>
-        private static string readPipe(NamedPipeClientStream pipe)
+        private static string readPipe(NamedPipeServerStream pipe)
         {
             byte[] message = new byte[512];
             List<byte> text = new List<byte>();
@@ -150,7 +172,7 @@ namespace DeformationConsole
             if (float.TryParse(stiffnessTextBox.Text, out value))
             {
                 stiffnessTextBox.BorderBrush = Brushes.Green;
-                sendCommand("set stiffness " + value.ToString());
+                sendCommand("set stiffness " + value.ToString(), true);
             }
             else
             {
@@ -169,7 +191,7 @@ namespace DeformationConsole
             if (float.TryParse(dampingTextBox.Text, out value))
             {
                 dampingTextBox.BorderBrush = Brushes.Green;
-                sendCommand("set damping " + value.ToString());
+                sendCommand("set damping " + value.ToString(), true);
             }
             else
             {
@@ -188,7 +210,7 @@ namespace DeformationConsole
             if (float.TryParse(gravityTextBox.Text, out value))
             {
                 gravityTextBox.BorderBrush = Brushes.Green;
-                sendCommand("set gravity " + value.ToString());
+                sendCommand("set gravity " + value.ToString(), true);
             }
             else
             {
@@ -209,7 +231,7 @@ namespace DeformationConsole
                 lightPosXTextBox.BorderBrush = Brushes.Green;
                 lightPosYTextBox.BorderBrush = Brushes.Green;
                 lightPosZTextBox.BorderBrush = Brushes.Green;
-                sendCommand("set lightpos " + valueX.ToString() + " " + valueY.ToString() + " " + valueZ.ToString());
+                sendCommand("set lightpos " + valueX.ToString() + " " + valueY.ToString() + " " + valueZ.ToString(), true);
             }
             else
             {
@@ -232,7 +254,7 @@ namespace DeformationConsole
                 lightColXTextBox.BorderBrush = Brushes.Green;
                 lightColYTextBox.BorderBrush = Brushes.Green;
                 lightColZTextBox.BorderBrush = Brushes.Green;
-                sendCommand("set lightcol " + valueX.ToString() + " " + valueY.ToString() + " " + valueZ.ToString());
+                sendCommand("set lightcol " + valueX.ToString() + " " + valueY.ToString() + " " + valueZ.ToString(), true);
             }
             else
             {
@@ -253,7 +275,7 @@ namespace DeformationConsole
             if (int.TryParse(addBunnyTextBox.Text, out value))
             {
                 addBunnyTextBox.BorderBrush = Brushes.Green;
-                sendCommand("add bunny " + value.ToString());
+                sendCommand("add bunny " + value.ToString(), true);
             }
             else
             {
@@ -268,7 +290,7 @@ namespace DeformationConsole
         /// <param name="e"></param>
         private void stiffnessGetButton_Click(object sender, RoutedEventArgs e)
         {
-            sendCommand("get stiffness");
+            sendCommand("get stiffness", true);
         }
 
         /// <summary>
@@ -278,7 +300,7 @@ namespace DeformationConsole
         /// <param name="e"></param>
         private void dampingGetButton_Click(object sender, RoutedEventArgs e)
         {
-            sendCommand("get damping");
+            sendCommand("get damping", true);
         }
 
         /// <summary>
@@ -288,7 +310,7 @@ namespace DeformationConsole
         /// <param name="e"></param>
         private void gravityGetButton_Click(object sender, RoutedEventArgs e)
         {
-            sendCommand("get gravity");
+            sendCommand("get gravity", true);
         }
 
         /// <summary>
@@ -298,7 +320,7 @@ namespace DeformationConsole
         /// <param name="e"></param>
         private void lightPosGetButton_Click(object sender, RoutedEventArgs e)
         {
-            sendCommand("get lightpos");
+            sendCommand("get lightpos", true);
         }
 
         /// <summary>
@@ -308,7 +330,7 @@ namespace DeformationConsole
         /// <param name="e"></param>
         private void lightColGetButton_Click(object sender, RoutedEventArgs e)
         {
-            sendCommand("get lightcol");
+            sendCommand("get lightcol", true);
         }
 
         /// <summary>
@@ -318,7 +340,7 @@ namespace DeformationConsole
         /// <param name="e"></param>
         private void addBunnyGetButton_Click(object sender, RoutedEventArgs e)
         {
-            sendCommand("get bunny");
+            sendCommand("get bunny", true);
         }
 
 

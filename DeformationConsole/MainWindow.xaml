@@ -41,6 +41,7 @@
                 </Grid.ColumnDefinitions>
                 <Label x:Name="connectLabel" Content="Connect to the simulator application (IPC):" Margin="0,10" FontWeight="Bold"/>
                 <Button x:Name="connectButton" Content="Connect" Click="connectButton_Click" Grid.Column="1" Margin="59,10,226,10"/>
+                <ProgressBar x:Name="progressBar" Margin="263,10,5,10" Grid.Column="1" IsIndeterminate="True" Visibility="Hidden"/>
             </Grid>
         </GroupBox>
 
